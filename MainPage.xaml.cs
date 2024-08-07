@@ -13,6 +13,7 @@ namespace WndProcTest
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
             myButton.Content = "Clicked";
+            Native.Window.FlashWindow();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace WndProcTest.Native
         public delegate IntPtr WndProcDelegate(IntPtr hwnd, uint message, IntPtr wParam, IntPtr lParam);
         private const int GWLP_WNDPROC = -4;
 
-        private static readonly Lazy<IntPtr> _coreWindowHwnd = new Lazy<IntPtr>(GetCoreWindowHwnd);
+        public static readonly Lazy<IntPtr> CoreWindowHwnd = new Lazy<IntPtr>(GetCoreWindowHwnd);
 
         // Make sure to hold a reference to the delegate so it doesn't get garbage
         // collected, or you'll get baffling ExecutionEngineExceptions when
@@ -21,19 +21,11 @@ namespace WndProcTest.Native
             _currDelegate = newProc;
             
             IntPtr newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newProc);
-
-            if (IntPtr.Size == 8)
-            {
-                return Interop.SetWindowLongPtr64(_coreWindowHwnd.Value, GWLP_WNDPROC, newWndProcPtr);
-            } 
-            else
-            {
-                return Interop.SetWindowLong32(_coreWindowHwnd.Value, GWLP_WNDPROC, newWndProcPtr);
-            }
+            return Interop.SetWindowLongPtr64(CoreWindowHwnd.Value, GWLP_WNDPROC, newWndProcPtr);
         }
 
         private static IntPtr GetCoreWindowHwnd()
-        {
+        {            
             dynamic coreWindow = Windows.UI.Core.CoreWindow.GetForCurrentThread();
             var interop = (ICoreWindowInterop)coreWindow;
             return interop.WindowHandle;

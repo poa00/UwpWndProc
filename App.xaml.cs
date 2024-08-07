@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Diagnostics;
+using Windows.UI.Core;
 
 namespace WndProcTest
 {
@@ -28,6 +29,7 @@ namespace WndProcTest
                 // for the CoreWindow to be ready so can get its HWND, and this is
                 // Good Enough(tm).
                 _oldWndProc = Native.WndProc.SetWndProc(WindowProcess);
+                
             }
 
             if (e.UWPLaunchActivatedEventArgs.PrelaunchActivated == false)
@@ -43,6 +45,10 @@ namespace WndProcTest
         private IntPtr WindowProcess(IntPtr hwnd, uint message, IntPtr wParam, IntPtr lParam)
         {
             // Standard WndProc handling code here
+            if (message == 0x0007) // WM_SETFOCUS
+            {
+                Debug.WriteLine($"Heard SETFOCUS with wParam: {wParam}, lParam: {lParam}");
+            }
 
             // Call the "base" WndProc
             return Native.Interop.CallWindowProc(_oldWndProc, hwnd, message, wParam, lParam);

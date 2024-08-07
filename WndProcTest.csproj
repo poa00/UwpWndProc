@@ -92,6 +92,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Native\Window.cs" />
     <Compile Include="Native\ICoreWindowInterop.cs" />
     <Compile Include="Native\Interop.cs" />
     <Compile Include="Native\WndProc.cs" />
